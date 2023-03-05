@@ -2,37 +2,77 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+body {
+  background-color: #36454F;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.taskBg {
+  background-color: #333;
+  border-radius: 6px;
+  padding: 10px 140px 10px 15px;
+  text-align: left;
+  font-size: 22px;
+  position: relative;
+  max-width: 1024px;
+  margin: auto auto 20px auto;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.taskBg div {
+  display: flex;
+  align-items: center;
+}
+
+.taskIndex {
+  color: #999;
+  border: 1px solid #999;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  text-align: center;
+  font-size: 14px;
+  margin-right: 8px;
+  align-items: center;
+  justify-content: center;
+}
+
+.taskBg .taskTitle {
+  flex: 1;
+}
+
+.taskBg .done .taskTitle {
+  text-decoration: line-through;
+  opacity: 0.3;
+}
+
+.iconsWrap {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 15px;
+  width: auto;
+  display: inline-block;
+}
+
+.taskBg .iconsWrap span {
+  display: inline-block;
+  margin: 0px 10px 0px 10px;
+  cursor: pointer;
+}
+
+.taskBg .iconsWrap span:hover {
+  filter: brightness(200%);
+}
+
+.checkIcon {
+  color: #90EE90;
+}
+
+.editIcon {
+  color:#87CEEB;
+}
+
+.deleteIcon {
+  color: #f56991;
 }
