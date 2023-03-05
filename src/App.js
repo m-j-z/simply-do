@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faPenToSquare, faX, faPlus } from '@fortawesome/free-solid-svg-icons';
+import React, { useState } from 'react'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSquare, faSquareCheck, faPenToSquare, faX, faPlus } from '@fortawesome/free-solid-svg-icons'
 
-import './App.css';
-import Modal from './components/modal/Modal';
+import './App.css'
+import Modal from './components/modal/Modal'
 
 function App() {
   const [toDos, setToDos] = useState([
     {"id": 1, "title": "Task 1", "status": false},
     {"id": 2, "title": "Task 2", "status": true},
-  ]);
+  ])
 
-  const [openModal, setOpenModal] = useState(false);
+  const [openModal, setOpenModal] = useState(false)
 
-  const [taskName, setTaskName] = useState('');
-  const [dueDate, setDueDate] = useState('2023-03-04');
-  const [description, setDescription] = useState('');
+  const [taskName, setTaskName] = useState('')
+  const [dueDate, setDueDate] = useState('2023-03-04')
+  const [description, setDescription] = useState('')
 
   const addTask = () => {
     if (!taskName || !dueDate) return
@@ -28,12 +28,12 @@ function App() {
     setTaskName('')
     setDescription('')
     setDueDate('2023-03-04')
-  };
+  }
 
   const deleteTask = (id) => {
     let tasks = toDos.filter( task => task.id !== id)
     setToDos(tasks)
-  };
+  }
 
   const toggleMark = (id) => {
     let uTask = toDos.map( task => {
@@ -43,19 +43,18 @@ function App() {
       return task
     })
     setToDos(uTask)
-  };
+  }
 
   const cancelUpdate = () => {
 
-  };
+  }
 
   const updateTask = (id) => {
-
-  };
+  }
 
   const changeTask = (e) => {
 
-  };
+  }
 
   return (
     <div className="App">
@@ -83,8 +82,13 @@ function App() {
               </div>
 
               <div className='iconsWrap'>
-                <span className='checkIcon' title='Finish Task' onClick={() => toggleMark(task.id)}>
-                  <FontAwesomeIcon icon={faCheck} /></span>
+                {task.status ? (
+                  <span className='checkIcon' title='Finish Task' onClick={() => toggleMark(task.id)}>
+                  <FontAwesomeIcon icon={faSquareCheck} /></span>
+                ) : (
+                  <span className='checkIcon' title='Finish Task' onClick={() => toggleMark(task.id)}>
+                  <FontAwesomeIcon icon={faSquare} /></span>
+                )}
                 <span className='editIcon' title='Edit Task' onClick={() => updateTask(task.id)}>
                   <FontAwesomeIcon icon={faPenToSquare} /></span>
                 <span className='deleteIcon' title='Delete Task' onClick={() => deleteTask(task.id)}>
@@ -93,7 +97,7 @@ function App() {
             </div>
 
           </React.Fragment>
-        );
+        )
       })}
 
     <Modal open={openModal} onClose={() => setOpenModal(false)}
@@ -101,7 +105,7 @@ function App() {
     description={description} setDescription={setDescription} 
     dueDate={dueDate} setDueDate={setDueDate} addTask={addTask} />
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

@@ -1,11 +1,11 @@
-import { faX } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faX } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useState } from 'react'
 
 import './Modal.css'
 
 function Modal({open, onClose, taskName, setTaskName, description, setDescription, dueDate, setDueDate, addTask}) {
-  if (!open) return null;
+  if (!open) return null
 
   const onSubmitClicked = () => {
     addTask()
