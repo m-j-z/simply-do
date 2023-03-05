@@ -10,8 +10,8 @@
 }
 
 .modalContainer {
+    border-radius: 16px;
     max-width: 600px;
-    min-height: 50%;
     width: 100%;
     position: fixed;
     top: 40%;
@@ -28,8 +28,12 @@
 
 .closeBtn {
     position: fixed;
-    top: 8px;
-    right: 8px;
+    top: 16px;
+    right: 16px;
+    border-radius: 50%;
+    color: white;
+    background-color: #36454F;
+    border: none;
 }
 
 .content {
@@ -52,4 +56,11 @@
     padding: 8px 0;
     border: none;
     color: white;
+}
+
+div.content label {
+    display: grid;
+    grid-template-columns: max-content max-content;
+    grid-gap: 5px;
+    text-align: right;
 }
