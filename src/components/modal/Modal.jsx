@@ -4,11 +4,20 @@ import React, { useState } from 'react'
 
 import './Modal.css'
 
-function Modal({open, onClose, taskName, setTaskName, description, setDescription, dueDate, setDueDate, addTask}) {
+function Modal({modalTitle, open, onClose, taskName, setTaskName, description, setDescription, dueDate, setDueDate, addTask, clearFields, updateTask}) {
   if (!open) return null
 
   const onSubmitClicked = () => {
-    addTask()
+    if (modalTitle === 'Add Task') {
+      addTask()
+    } else if (modalTitle === 'Edit Task') {
+      updateTask()
+    }
+    onClose()
+  }
+
+  const onCancelClicked = () => {
+    clearFields()
     onClose()
   }
 
@@ -16,10 +25,13 @@ function Modal({open, onClose, taskName, setTaskName, description, setDescriptio
     <div className='overlay'>
         <div className="modalContainer">
           <div className="modalRight">
-            <button className='btn closeBtn btn-danger' onClick={onClose}><FontAwesomeIcon icon={faX} /></button>
+            <div className='header'>
+              <button className='btn closeBtn btn-danger' onClick={onClose}><FontAwesomeIcon icon={faX} /></button>
+              <br /><br />
+              <h1 className='modalTitle'>{modalTitle}</h1>
+            </div>
 
             <div className="content">
-              <h1>Add New Task</h1>
               <label htmlFor="taskName"> Task Name </label>
               <input type="text" className='taskName' 
               placeholder='Enter task name...' value={taskName} 
@@ -36,7 +48,7 @@ function Modal({open, onClose, taskName, setTaskName, description, setDescriptio
 
             <div className="btnContainer">
                 <button className='btn btn-success' onClick={onSubmitClicked}><span>Submit</span></button>
-                <button className='btn btn-danger' onClick={onClose}><span>Cancel</span></button>
+                <button className='btn btn-danger' onClick={onCancelClicked}><span>Cancel</span></button>
             </div>
           </div>
         </div>

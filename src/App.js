@@ -8,33 +8,46 @@ import Modal from './components/modal/Modal'
 
 function App() {
   const [toDos, setToDos] = useState([
-    {"id": 1, "title": "Task 1", "status": false},
-    {"id": 2, "title": "Task 2", "status": true},
+    {id: 1, taskName: "Task 1", description: "hello this is a description", dueDate: "2024-05-03", status: false},
+    {id: 2, taskName: "Task 2", description: "hello this is a description2", dueDate: "2024-08-03", status: true},
   ])
 
   const [openModal, setOpenModal] = useState(false)
+  const [modalTitle, setModalTitle] = useState('')
 
+  const [selectedTask, setSelectedTask] = useState('')
   const [taskName, setTaskName] = useState('')
   const [dueDate, setDueDate] = useState('2023-03-04')
   const [description, setDescription] = useState('')
 
+  /**
+   * Adds a new task to the ToDo list.
+   * @returns null
+   */
   const addTask = () => {
-    if (!taskName || !dueDate) return
+    if (!taskName || !dueDate) return null
 
-    console.log('here')
     let entryId = toDos.length + 1
-    let entry = {"id": entryId, "title": taskName, "description": description, "dueDate": dueDate, "status": false}
+    let entry = {id: entryId, taskName: taskName, description: description, dueDate: dueDate, status: false}
     setToDos([...toDos, entry])
     setTaskName('')
     setDescription('')
     setDueDate('2023-03-04')
   }
 
+  /**
+   * Deletes the task with matching ID.
+   * @param {*} id Task identifier
+   */
   const deleteTask = (id) => {
     let tasks = toDos.filter( task => task.id !== id)
     setToDos(tasks)
   }
 
+  /**
+   * Completes the task with matching ID.
+   * @param {*} id Task identifier
+   */
   const toggleMark = (id) => {
     let uTask = toDos.map( task => {
       if (task.id === id) {
@@ -45,15 +58,38 @@ function App() {
     setToDos(uTask)
   }
 
-  const cancelUpdate = () => {
-
+  /**
+   * Clears the fields of the Modal
+   */
+  const clearFields = () => {
+    setTaskName('')
+    setDescription('')
+    setDueDate('2023-03-04')
   }
 
-  const updateTask = (id) => {
+  /**
+   * Creates a popup with the appropriate fields filled out for the specified task
+   * @param {*} task The task with all elements
+   */
+  const updateTask = (task) => {
+    setSelectedTask({id: task.id, status: task.status})
+    setTaskName(task.taskName)
+    setDescription(task.description)
+    setDueDate(task.dueDate)
+    setModalTitle('Edit Task')
+    setOpenModal(true)
   }
 
-  const changeTask = (e) => {
-
+  /**
+   * Updates the task.
+   */
+  const changeTask = () => {
+    let updatedTask = {id: selectedTask.id, taskName: taskName, description: description, dueDate: dueDate, status: selectedTask.status}
+    let filterToDos = [...toDos].filter( task => task.id !== updatedTask.id )
+    setToDos([...filterToDos, updatedTask])
+    setTaskName('')
+    setDescription('')
+    setDueDate('2023-03-04')
   }
 
   return (
@@ -63,7 +99,7 @@ function App() {
       <br /><br />
 
       {/** Add new task */}
-      <button className='btn btn-lg btn-success' onClick={() => setOpenModal(true)}><FontAwesomeIcon icon={faPlus} /> Add New Task </button>
+      <button className='btn btn-lg btn-success' onClick={() => {setOpenModal(true); setModalTitle('Add Task')}}><FontAwesomeIcon icon={faPlus} /> Add New Task </button>
       <br /><br />
 
       {/* Display Todos */}
@@ -78,7 +114,7 @@ function App() {
             <div className='taskBg'>
               <div className={task.status ? 'done' : ''}>
                 <span className='taskIndex'>{index+1}</span>
-                <span className='taskTitle'>{task.title}</span>
+                <span className='taskTitle'>{task.taskName}</span>
               </div>
 
               <div className='iconsWrap'>
@@ -89,7 +125,7 @@ function App() {
                   <span className='checkIcon' title='Finish Task' onClick={() => toggleMark(task.id)}>
                   <FontAwesomeIcon icon={faSquare} /></span>
                 )}
-                <span className='editIcon' title='Edit Task' onClick={() => updateTask(task.id)}>
+                <span className='editIcon' title='Edit Task' onClick={() => {updateTask({id: task.id, taskName: task.taskName, description: task.description, dueDate: task.dueDate, status: task.status})}}>
                   <FontAwesomeIcon icon={faPenToSquare} /></span>
                 <span className='deleteIcon' title='Delete Task' onClick={() => deleteTask(task.id)}>
                   <FontAwesomeIcon icon={faX} /></span>
@@ -100,10 +136,10 @@ function App() {
         )
       })}
 
-    <Modal open={openModal} onClose={() => setOpenModal(false)}
+    <Modal modalTitle={modalTitle} open={openModal} onClose={() => setOpenModal(false)}
     taskName={taskName} setTaskName={setTaskName} 
     description={description} setDescription={setDescription} 
-    dueDate={dueDate} setDueDate={setDueDate} addTask={addTask} />
+    dueDate={dueDate} setDueDate={setDueDate} addTask={addTask} clearFields={clearFields} updateTask={changeTask}/>
     </div>
   )
 }
