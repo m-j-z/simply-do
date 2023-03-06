@@ -1,33 +1,46 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSquare, faSquareCheck, faPenToSquare, faX, faPlus } from '@fortawesome/free-solid-svg-icons'
-import { Amplify, Auth, Storage } from 'aws-amplify';
-import { withAuthenticator } from '@aws-amplify/ui-react'
 
 import './App.css'
 import Modal from './components/modal/Modal'
+import { withAuthenticator } from '@aws-amplify/ui-react'
+import { Amplify, API, Auth, graphqlOperation } from 'aws-amplify'
+import '@aws-amplify/ui-react/styles.css';
 
-import awsconfig from './aws-exports';
-Amplify.configure(awsconfig);
+import awsExports from './aws-exports';
+import { listTasks } from './graphql/queries'
+Amplify.configure(awsExports);
 
 function App({signOut}) {
-
+  const [toDos, setToDos] = useState([])
   const [user, setUser] = useState('')
-  Auth.currentAuthenticatedUser().then((user) => {
-    setUser(user.attributes.sub)
-  })
+  const ref = useRef()
+  ref.current = user
 
-  // Storage.put(user + '.json', 'hello!').then(resp => {
-  //   console.log(resp)
-  // }).catch(err => {
-  //   console.log(err)
-  // })
+  useEffect(() => {
+    getUser()
+    fetchTasks()
+  }, [])
 
-  const [toDos, setToDos] = useState([
-    {id: 1, taskName: "Task 1", description: "hello this is a description", dueDate: "2024-05-03", status: false},
-    {id: 2, taskName: "Task 2", description: "hello this is a description2", dueDate: "2024-08-03", status: true},
-  ])
+  const getUser = async() => {
+    await Auth.currentAuthenticatedUser().then((curr) => {
+      setUser(curr.attributes.sub)
+    }).catch(error => {
+      console.log(error)
+    })
+  }
+
+  const fetchTasks = async() => {
+    try {
+      const toDosData = await API.graphql(graphqlOperation(listTasks))
+      const toDosList = toDosData.data.listTasks.items.filter(task => task.owner === ref.current)
+      setToDos(toDosList)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const [openModal, setOpenModal] = useState(false)
   const [modalTitle, setModalTitle] = useState('')
@@ -36,6 +49,15 @@ function App({signOut}) {
   const [taskName, setTaskName] = useState('')
   const [dueDate, setDueDate] = useState('2023-03-04')
   const [description, setDescription] = useState('')
+
+  /**
+   * Clears the fields of the Modal
+   */
+  const clearFields = () => {
+    setTaskName('')
+    setDescription('')
+    setDueDate('2023-03-04')
+  }
 
   /**
    * Adds a new task to the ToDo list.
@@ -47,9 +69,7 @@ function App({signOut}) {
     let entryId = toDos.length + 1
     let entry = {id: entryId, taskName: taskName, description: description, dueDate: dueDate, status: false}
     setToDos([...toDos, entry])
-    setTaskName('')
-    setDescription('')
-    setDueDate('2023-03-04')
+    clearFields()
   }
 
   /**
@@ -76,15 +96,6 @@ function App({signOut}) {
   }
 
   /**
-   * Clears the fields of the Modal
-   */
-  const clearFields = () => {
-    setTaskName('')
-    setDescription('')
-    setDueDate('2023-03-04')
-  }
-
-  /**
    * Creates a popup with the appropriate fields filled out for the specified task
    * @param {*} task The task with all elements
    */
@@ -104,9 +115,7 @@ function App({signOut}) {
     let updatedTask = {id: selectedTask.id, taskName: taskName, description: description, dueDate: dueDate, status: selectedTask.status}
     let filterToDos = [...toDos].filter( task => task.id !== updatedTask.id )
     setToDos([...filterToDos, updatedTask])
-    setTaskName('')
-    setDescription('')
-    setDueDate('2023-03-04')
+    clearFields()
   }
 
   return (
