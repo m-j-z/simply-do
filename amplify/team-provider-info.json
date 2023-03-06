@@ -1,0 +1,32 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-simplydo-dev-171059-authRole",
+      "UnauthRoleArn": "arn:aws:iam::002019052618:role/amplify-simplydo-dev-171059-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::002019052618:role/amplify-simplydo-dev-171059-authRole",
+      "Region": "us-west-1",
+      "DeploymentBucketName": "amplify-simplydo-dev-171059-deployment",
+      "UnauthRoleName": "amplify-simplydo-dev-171059-unauthRole",
+      "StackName": "amplify-simplydo-dev-171059",
+      "StackId": "arn:aws:cloudformation:us-west-1:002019052618:stack/amplify-simplydo-dev-171059/c15eb000-bbbb-11ed-98b8-0228fcc7e65f",
+      "AmplifyAppId": "d1a1kztd6laa0z"
+    },
+    "categories": {
+      "function": {
+        "simplydo239b871b": {
+          "deploymentBucketName": "amplify-simplydo-dev-171059-deployment",
+          "s3Key": "amplify-builds/simplydo239b871b-6b6e6a465230514a792f-build.zip"
+        }
+      },
+      "api": {
+        "api71986d96": {}
+      },
+      "auth": {
+        "simplydo": {}
+      },
+      "storage": {
+        "s3simplydostoragec96308d1": {}
+      }
+    }
+  }
+}

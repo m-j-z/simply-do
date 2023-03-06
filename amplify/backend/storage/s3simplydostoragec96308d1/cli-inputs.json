@@ -1,0 +1,11 @@
+{
+  "resourceName": "s3simplydostoragec96308d1",
+  "bucketName": "simplydo-storage-c96308d1",
+  "policyUUID": "397e1054",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "DELETE"
+  ]
+}

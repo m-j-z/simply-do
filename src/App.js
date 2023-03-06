@@ -2,11 +2,28 @@ import React, { useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSquare, faSquareCheck, faPenToSquare, faX, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { Amplify, Auth, Storage } from 'aws-amplify';
+import { withAuthenticator } from '@aws-amplify/ui-react'
 
 import './App.css'
 import Modal from './components/modal/Modal'
 
-function App() {
+import awsconfig from './aws-exports';
+Amplify.configure(awsconfig);
+
+function App({signOut}) {
+
+  const [user, setUser] = useState('')
+  Auth.currentAuthenticatedUser().then((user) => {
+    setUser(user.attributes.sub)
+  })
+
+  // Storage.put(user + '.json', 'hello!').then(resp => {
+  //   console.log(resp)
+  // }).catch(err => {
+  //   console.log(err)
+  // })
+
   const [toDos, setToDos] = useState([
     {id: 1, taskName: "Task 1", description: "hello this is a description", dueDate: "2024-05-03", status: false},
     {id: 2, taskName: "Task 2", description: "hello this is a description2", dueDate: "2024-08-03", status: true},
@@ -94,8 +111,10 @@ function App() {
 
   return (
     <div className="App">
+      <button type='button' className='btn btn-primary signOut' onClick={signOut}>Sign Out</button>
+
       <br /><br />
-      <h2>SimplyDo</h2>
+      <h2 className='appTitle'>SimplyDo</h2>
       <br /><br />
 
       {/** Add new task */}
@@ -144,4 +163,4 @@ function App() {
   )
 }
 
-export default App
+export default withAuthenticator(App)

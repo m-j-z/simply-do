@@ -76,3 +76,12 @@ body {
 .deleteIcon {
   color: #f56991;
 }
+
+.signOut {
+  margin: 16px;
+  float: right;
+}
+
+.appTitle {
+  text-align: center;
+}
