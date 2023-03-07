@@ -11,6 +11,7 @@ import '@aws-amplify/ui-react/styles.css';
 
 import awsExports from './aws-exports';
 import { listTasks } from './graphql/queries'
+import { createTask, deleteTask as deleteTaskGraph, updateTask as updateTaskGraph } from './graphql/mutations'
 Amplify.configure(awsExports);
 
 function App({signOut}) {
@@ -65,10 +66,15 @@ function App({signOut}) {
    */
   const addTask = () => {
     if (!taskName || !dueDate) return null
-
-    let entryId = toDos.length + 1
-    let entry = {id: entryId, taskName: taskName, description: description, dueDate: dueDate, status: false}
+    let entryId = Date.now()
+    let entry = {id: entryId, taskName: taskName, description: description, dueDate: dueDate, status: false, owner: ref.current}
     setToDos([...toDos, entry])
+    const variables = {
+      input: entry
+    }
+    API.graphql(graphqlOperation(createTask, variables)).catch(error => {
+      console.log(error)
+    })
     clearFields()
   }
 
@@ -79,6 +85,12 @@ function App({signOut}) {
   const deleteTask = (id) => {
     let tasks = toDos.filter( task => task.id !== id)
     setToDos(tasks)
+    const variables = {
+      input: {id: id}
+    }
+    API.graphql(graphqlOperation(deleteTaskGraph, variables)).catch(error => {
+      console.log(error)
+    })
   }
 
   /**
@@ -93,6 +105,12 @@ function App({signOut}) {
       return task
     })
     setToDos(uTask)
+    const variables = {
+      input: {id: id, status: !uTask.status}
+    }
+    API.graphql(graphqlOperation(updateTaskGraph, variables)).catch(error => {
+      console.log(error)
+    })
   }
 
   /**
@@ -113,9 +131,15 @@ function App({signOut}) {
    */
   const changeTask = () => {
     let updatedTask = {id: selectedTask.id, taskName: taskName, description: description, dueDate: dueDate, status: selectedTask.status}
-    let filterToDos = [...toDos].filter( task => task.id !== updatedTask.id )
+    let filterToDos = [...toDos].filter( task => task.id !== updatedTask.id)
     setToDos([...filterToDos, updatedTask])
     clearFields()
+    const variables = {
+      input: updatedTask
+    }
+    API.graphql(graphqlOperation(updateTaskGraph, variables)).catch(error => {
+      console.log(error)
+    })
   }
 
   return (
